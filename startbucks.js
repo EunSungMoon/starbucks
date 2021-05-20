@@ -12,23 +12,28 @@
 
 const selectMenu = document.querySelector('#radioBtn')
 const createEl = dom => document.createElement(dom);
+const el = selector => document.querySelector(selector);
+const elAll = selector => document.querySelectorAll(selector);
 
 
 selectMenu.addEventListener('change', () => { //메뉴 선택시 각 메뉴에 따른 디테일 메뉴화면으로 전환
   MainMenu();
-  hide();
-  tempRadio();
+  hide(selectMenu);
+  tempSelector();
   nextstage();
 
 })
+let cname = "";
 
 const MainMenu = () => {
   let arrRadio = [coffee, latte]
   if (arrRadio[0].checked == true) {
     coffee_order()
+    cname = 'americano'
   }
   else if (arrRadio[1].checked == true) {
     latte_order()
+    cname = 'latte'
   }
 }
 
@@ -41,28 +46,45 @@ const latte_order = () => { //라떼 디테일 메뉴 버튼 출력
 }
 
 
-function hide() { //radio버튼 숨김, 다른 버튼들도 숨기게 만들어야지~
-  selectMenu.style.display = 'none' //커피 종류 숨김 
+const hide = (event) => { //radio버튼 숨김, 다른 버튼들도 숨기게 만들어야지~
+  event.style.display = 'none' //커피 종류 숨김 
 }
 
-const tempRadio = () => { //hot, ice선택지
+let temps = "";
+const tempSelector = () => { //hot, ice선택지
   const dom = createEl('div')
+  dom.id = "tempRadio"
+
   let temp = ['hot', 'ice']
+
   temp.forEach((tempValue, i) => {
-    let tempBtn = document.createElement('input')
-    let labelValue = document.createElement('label')
+    let tempBtn = createEl('input')
+    let labelValue = createEl('label')
 
     labelValue.innerHTML = tempValue
     tempBtn.type = "radio"
     tempBtn.name = "temp"
+    tempBtn.id=temp[i]
 
-    tempBtn.tempValue = i
+    tempBtn.tempValue=i
 
     dom.appendChild(labelValue);
     dom.appendChild(tempBtn);
-    document.querySelector('body').appendChild(dom)
+    el('body').appendChild(dom)
+  
   })
 
+
+  elAll('#tempRadio').forEach(i => i.addEventListener('change', () => {
+    // e.target.dataset
+
+    if(document.getElementById('hot').checked){
+      temps="hot"
+    }
+    else if(document.getElementById('ice').checked){
+      temps="ice"
+    }
+  }))
 }
 
 
@@ -73,20 +95,25 @@ const tempRadio = () => { //hot, ice선택지
 
 const nextstage = () => { //다음 버튼
   const dom = createEl('div')
-  let nextBtn = document.createElement('button')
+  dom.id = "next"
+  let nextBtn = createEl('button')
   nextBtn.id = "nextBtn"
   nextBtn.innerHTML = "다음"
 
   dom.appendChild(nextBtn);
-  document.querySelector('body').appendChild(dom)
+  el('body').appendChild(dom)
 
-  let next = document.querySelector('#nextBtn')
-  next.addEventListener('click', () => {
-    dom.style.display = 'none' //ice hot 숨김
-    alert('완료');// 메뉴 확인창 -> 완료 되었습니다 텍스트 등장 예정
+
+  el('#next').addEventListener('click', () => {
+    hide(next);
+    hide(tempRadio)
+    alert('선택하신 메뉴가 맞습니까? '+ cname + ', '+ temps);// 메뉴 확인창 -> 완료 되었습니다 텍스트 등장 예정
 
   })
-} 
+
+
+
+}
 
 
 
