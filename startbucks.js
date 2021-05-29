@@ -21,6 +21,7 @@ elAll('input[name="menu"]').forEach(dom => dom.addEventListener('change', e => {
   coffeeMenu(e.target);
 }));
 
+
 const coffeeMenu = (target) => { //화면 삭제, 아메리카노와 라떼에 해당하는 디테일 메뉴 선택화면 출력
   const coffeeMenuBtn = el('#radioBtn');//아메리카노, 라떼 선택지를 화면에서 지운다
   hide(coffeeMenuBtn);
@@ -34,18 +35,20 @@ const newOrder = { //아메리카노, 라떼 디테일 화면출력
   americano(value) {
     HotIce(value)
     nextStage(value)
+    console.log("아메리카노");
   },
   latte(value) {
     HotIce(value)
     milkTypes(value)
     nextStage(value)
+    console.log("라떼");
   }
 };
 
 const milkTypes = () => {
-  let $milktypes = $(`<div id ="milktypes" ><label><input type="radio" name="milktype" value="original"/> 일반우유 </label>
-  <label><input type="radio" name="milktype" value="bean"/> 두유 </label>
-  <label><input type="radio" name="milktype" value="oats"/> 귀리우유 </label></div>`)
+  let $milktypes = $(`<div id ="milktypes" ><label><input type="radio" name="milktype" value="original" for="original"/> 일반우유 </label>
+  <label><input type="radio" name="milktype" value="bean" for="bean"/> 두유 </label>
+  <label><input type="radio" name="milktype" value="oats" for="oats"/> 귀리우유 </label></div>`)
   $('#content').append($milktypes)
 
   elAll('input[name="milktype"]').forEach(dom => dom.addEventListener('change', e => {
@@ -100,18 +103,32 @@ const nextStage = () => { //다음 버튼
   el('#next').addEventListener('click', e => { //화면에 버튼 지우고, 알림창 등장 =>메뉴확인 후 끝!!
     hide(next);
     hide(hotice);
-    alert('선택하신 메뉴가 맞습니까? ') //선택한 메뉴 등장!!!
+    hideCoffee();
     orderEnd();
-  })
 
-  // el('#next').addEventListener('click', () => {
-  //   hide(next);
-  //   hide(tempRadio);
-  //   hide(latteMenu); //hide를 한번에 묶을수 있는 방법... 뭐가 있을까...
-  //   alert('선택하신 메뉴가 맞습니까? ' + cname + ', ' + temps + ', ' + milkTypes);// 메뉴 확인창 -> 완료 되었습니다 텍스트 등장 예정
-  //   orderEnd();
-  // })
+
+
+
+
+  });
+  const hideCoffee = () => {
+    let milktypeChk = $('input[name="milktype"]:checked').val();
+    let coffeeChk = $('input[name="menu"]:checked').val();
+    let icehotChk = $('input[name="icehot"]:checked').val();
+
+    console.log(milktypeChk);
+
+    if ($('input[name="menu"]:checked').val() == 'latte') {
+      hide(milktypes);
+      alert(coffeeChk + ', ' + icehotChk + ', ' + milktypeChk + ' 선택하신 메뉴가 맞습니까? ') //선택한 메뉴 등장!!!
+    }
+    else if ($('input[name="menu"]:checked').val() == 'americano') {
+      alert(coffeeChk + ', ' + icehotChk + ', ' + ' 선택하신 메뉴가 맞습니까? ') //선택한 메뉴 등장!!!
+    }
+
+  };
 };
+
 
 const orderEnd = () => {//완료 텍스트 출력
 
